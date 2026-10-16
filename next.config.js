@@ -2,16 +2,13 @@
 const isDev = process.env.NODE_ENV !== 'production'
 module.exports = {
   // basePath: isDev ? '' : '/DSVI_Tool_v3',
-  basePath: '',
+  // '' for Netlify, '/DSVI_Tool_v3' for GitHub Pages (set in the deploy workflow)
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   // assetPrefix: isDev ? '': '/DSVI_Tool_v3/',
   images: {
     loader: 'akamai',
     path: '/',
     domains: ['https://server.arcgisonline.com'],
-  },
-  env: {
-    mapbox_token:
-      'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
   },
   webpack: (
     config,

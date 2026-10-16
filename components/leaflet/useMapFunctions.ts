@@ -201,7 +201,9 @@ export const useMapFunctions = () => {
       (x) => x.slug === 'sv_distance_to_edu'
     )
 
-    const roads = distance_maps?.data.find((x) => x.slug === 'sv_roads')
+    const road_density = distance_maps?.data.find(
+      (x) => x.slug === 'sv_road_density'
+    )
 
     const bio_physical = geodata.find((x) => x.slug === 'sv_bio_physical')
     const elevation = bio_physical?.data.find((e) => e.slug === 'sv_elevation')
@@ -231,9 +233,6 @@ export const useMapFunctions = () => {
       (x) => x.slug === 'sv_celltower'
     )
 
-    // const road_density = socio_economic.data.find((e) => e.slug === 'sv_road_density');
-    // const {status: road_density_status, value: road_density_value} = road_density;
-
     const relative_wealth = socio_economic?.data.find(
       (x) => x.slug === 'sv_relative_wealth'
     )
@@ -246,7 +245,7 @@ export const useMapFunctions = () => {
       distance_to_healthcare,
       distance_to_finance,
       distance_to_edu,
-      roads,
+      road_density,
       elevation,
       slope,
       max_temp,

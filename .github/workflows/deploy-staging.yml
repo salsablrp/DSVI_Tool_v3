@@ -1,0 +1,51 @@
+name: CI Staging
+
+# Test deployment for a fork, e.g. https://<user>.github.io/DSVI_Tool_v3
+# It never runs in SDG-AI-Lab/DSVI_Tool_v3, so the live site is not affected.
+
+on:
+  push:
+    branches:
+      - feature/static-high-res-layers
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    if: github.repository != 'SDG-AI-Lab/DSVI_Tool_v3'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: install
+        run: |
+          yarn install
+
+      - name: build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          yarn build
+
+      - name: export
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          yarn export
+
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d out -u "github-actions-bot <support+actions@github.com>" -t true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

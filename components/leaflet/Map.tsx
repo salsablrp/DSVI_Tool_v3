@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   MapContainer,
   LayersControl,
@@ -12,7 +12,7 @@ import { FilterContext } from '../../context/FilterContext'
 import CircleMarkers from '../marker/CircleMarkers'
 import CircleMarkersVulnerability from '../marker/CircleMarkersVulnerability'
 import AOI from '../../public/static/tajikistan/AOI.json'
-import BetterWMSTileLayer from '../controls/BetterWMSTileLayer'
+import HighResRasterLayer from '../controls/HighResRasterLayer'
 import NewLegend_2 from '../controls/NewLegend_2'
 import MapControls from '../controls/MapControls'
 import InfoBox from '../controls/InfoBox'
@@ -20,11 +20,6 @@ import { useMapFunctions } from './useMapFunctions'
 import AOIprojection from '../controls/AOIprojection'
 import NewProjection from '../controls/NewProjection'
 import UpdateMap from './UpdateMap'
-
-export const geoServerUrl =
-  'http://sdg-geoserver.ddns.net:8080/geoserver/sdg-ai-lab/wms'
-// 'https://sdg-geoserver.ddns.net:8443/geoserver/sdg-ai-lab/wms'
-// export const geoServerUrl = 'http://localhost:8080/geoserver/sdg-ai-lab/wms'
 
 const OsmMap = () => {
   const { state } = useContext(FilterContext)
@@ -106,49 +101,18 @@ const OsmMap = () => {
 
   const displaySvLayers = () => {
     return sv.map((layerData) => {
-      const { status, layer, style, value } = layerData
+      const { status, slug, title, colors, value } = layerData
 
       if (status) {
-        if (layerData.slug === 'sv_roads') {
-          return (
-            <WMSTileLayer
-              key={layer}
-              params={{
-                layers: layer,
-                format: 'image/png',
-                transparent: true,
-                version: '1.1.0',
-              }}
-              url={geoServerUrl}
-              zIndex={9999}
-              opacity={value / 100}
-            />
-          )
-        } else {
-          return (
-            <Fragment key={layer}>
-              <BetterWMSTileLayer
-                url={geoServerUrl}
-                layers={layer}
-                styles={style}
-                opacity={value / 100}
-              />
-              {layerData.slug === 'sv_distance_to_edu' && (
-                <WMSTileLayer
-                  params={{
-                    layers: 'sdg-ai-lab:edu_single_point',
-                    format: 'image/png',
-                    transparent: true,
-                    version: '1.1.0',
-                  }}
-                  url={geoServerUrl}
-                  zIndex={9999}
-                  opacity={value / 100}
-                />
-              )}
-            </Fragment>
-          )
-        }
+        return (
+          <HighResRasterLayer
+            key={slug}
+            slug={slug}
+            title={title}
+            colors={colors}
+            opacity={value / 100}
+          />
+        )
       }
     })
   }
