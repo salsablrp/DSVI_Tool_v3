@@ -1,0 +1,59 @@
+name: CI Staging
+
+# Test deployment for a fork, e.g. https://<user>.github.io/DSVI_Tool_v3
+# It never runs in SDG-AI-Lab/DSVI_Tool_v3, so the live site is not affected.
+
+on:
+  push:
+    branches:
+      - feature/static-high-res-layers
+      - feature/high-res-layers-master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    if: github.repository != 'SDG-AI-Lab/DSVI_Tool_v3'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same Node version as publish.yml on master
+      - name: Use Node.js 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: install
+        run: |
+          yarn install
+
+      - name: build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          set -o pipefail
+          yarn build 2>&1 | tee build.log
+
+      - name: show build error
+        if: failure()
+        run: |
+          echo "::error title=build log::$(tail -c 4000 build.log | tr -d '\r' | awk 'BEGIN{ORS="%0A"} {gsub(/%/,"%25"); print}')"
+
+      - name: export
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          yarn export
+
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d out -u "github-actions-bot <support+actions@github.com>" -t true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
