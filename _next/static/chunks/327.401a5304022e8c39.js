@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[327],{2327:function(e){e.exports=JSON.parse('{"width":1552,"height":876,"bounds":[67.38313134737466,36.66624376233701,75.14313134737466,41.04624376233701],"offset":289,"scale":0.10638752403332621,"nodata":65535,"min":289,"max":7261,"breaks":[289,1140,2663,3841,4424],"source":"r_norm_DEM_Large.tif"}')}}]);
