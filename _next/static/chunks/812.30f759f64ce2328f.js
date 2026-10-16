@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[812],{8812:function(e){e.exports=JSON.parse('{"width":1552,"height":876,"bounds":[67.38313134737466,36.66624376233701,75.14313134737466,41.04624376233701],"offset":1,"scale":0.003357036042359691,"nodata":65535,"min":1,"max":221,"breaks":[1,21,41,61,103],"source":"r_norm_NDVI.tif"}')}}]);
